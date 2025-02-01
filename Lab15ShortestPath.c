@@ -36,92 +36,116 @@
 #include <stdlib.h>
 #include <limits.h>
 
-#define MAX 100
+#define MAX 10
 
-// Structure to represent an edge
-typedef struct {
-    int u, v, weight;
-} Edge;
-
-// Graph structure
-typedef struct {
-    int adjMatrix[MAX][MAX];
-    int vertices;
-} Graph;
-
-// Function to initialize the graph
-void initGraph(Graph* g, int vertices) {
-    g->vertices = vertices;
+// Function to implement Dijkstra’s Algorithm for shortest path
+void dijkstra(int graph[MAX][MAX], int src, int vertices) {
+    int dist[vertices];
+    int visited[vertices];
+    
+    // Initialize the distance array
     for (int i = 0; i < vertices; i++) {
-        for (int j = 0; j < vertices; j++) {
-            g->adjMatrix[i][j] = 0;
-        }
-    }
-}
-
-// Function to add an edge
-void addEdge(Graph* g, int u, int v, int weight) {
-    g->adjMatrix[u][v] = weight;
-    g->adjMatrix[v][u] = weight;  // For undirected graph
-}
-
-// Function to take user input for the graph
-void inputGraph(Graph* g) {
-    int edges, u, v, weight;
-    printf("Enter number of vertices: ");
-    scanf("%d", &g->vertices);
-    initGraph(g, g->vertices);
-    printf("Enter number of edges: ");
-    scanf("%d", &edges);
-    printf("Enter edges (u v weight):\n");
-    for (int i = 0; i < edges; i++) {
-        scanf("%d %d %d", &u, &v, &weight);
-        addEdge(g, u, v, weight);
-    }
-}
-
-// Prim’s Algorithm to find MST
-void primMST(Graph* g) {
-    int parent[MAX]; // Array to store MST
-    int key[MAX];    // Key values to pick minimum weight edge
-    int visited[MAX]; // To track vertices in MST
-
-    for (int i = 0; i < g->vertices; i++) {
-        key[i] = INT_MAX;
+        dist[i] = INT_MAX;
         visited[i] = 0;
     }
-
-    key[0] = 0;  // Starting from the first vertex
-    parent[0] = -1;
-
-    for (int count = 0; count < g->vertices - 1; count++) {
-        int min = INT_MAX, u = -1;
-        for (int v = 0; v < g->vertices; v++) {
-            if (!visited[v] && key[v] < min) {
-                min = key[v];
+    
+    dist[src] = 0; // Distance from source to itself is 0
+    
+    for (int count = 0; count < vertices - 1; count++) {
+        // Find the minimum distance vertex
+        int u = -1;
+        int minDist = INT_MAX;
+        for (int v = 0; v < vertices; v++) {
+            if (!visited[v] && dist[v] < minDist) {
+                minDist = dist[v];
                 u = v;
             }
         }
-
+        
+        if (u == -1) break; // No more reachable vertices
+        
+        // Mark the vertex as visited
         visited[u] = 1;
-
-        for (int v = 0; v < g->vertices; v++) {
-            if (g->adjMatrix[u][v] && !visited[v] && g->adjMatrix[u][v] < key[v]) {
-                parent[v] = u;
-                key[v] = g->adjMatrix[u][v];
+        
+        // Update the distances of adjacent vertices
+        for (int v = 0; v < vertices; v++) {
+            if (!visited[v] && graph[u][v] != 0 && dist[u] != INT_MAX 
+                && dist[u] + graph[u][v] < dist[v]) {
+                dist[v] = dist[u] + graph[u][v];
             }
         }
     }
 
-    printf("Prim's MST:\n");
-    for (int i = 1; i < g->vertices; i++) {
-        printf("%d - %d: %d\n", parent[i], i, g->adjMatrix[i][parent[i]]);
+    // Print the shortest distances from source
+    printf("Dijkstra’s Shortest Path from Vertex %d:\n", src);
+    for (int i = 0; i < vertices; i++) {
+        if (dist[i] == INT_MAX)
+            printf("Vertex %d: INF\n", i);
+        else
+            printf("Vertex %d: %d\n", i, dist[i]);
+    }
+}
+
+// Function to implement Floyd-Warshall’s Algorithm
+void floydWarshall(int graph[MAX][MAX], int vertices) {
+    int dist[vertices][vertices];
+    
+    // Initialize the distance matrix with the graph values
+    for (int i = 0; i < vertices; i++) {
+        for (int j = 0; j < vertices; j++) {
+            if (i == j) dist[i][j] = 0;
+            else if (graph[i][j] != 0) dist[i][j] = graph[i][j];
+            else dist[i][j] = INT_MAX;
+        }
+    }
+
+    // Floyd-Warshall algorithm
+    for (int k = 0; k < vertices; k++) {
+        for (int i = 0; i < vertices; i++) {
+            for (int j = 0; j < vertices; j++) {
+                if (dist[i][k] != INT_MAX && dist[k][j] != INT_MAX && dist[i][j] > dist[i][k] + dist[k][j]) {
+                    dist[i][j] = dist[i][k] + dist[k][j];
+                }
+            }
+        }
+    }
+    
+    // Print the shortest distance matrix
+    printf("Floyd-Warshall Shortest Path Matrix:\n");
+    for (int i = 0; i < vertices; i++) {
+        for (int j = 0; j < vertices; j++) {
+            if (dist[i][j] == INT_MAX) 
+                printf("INF ");
+            else 
+                printf("%d ", dist[i][j]);
+        }
+        printf("\n");
     }
 }
 
 int main() {
-    Graph g;
-    inputGraph(&g);
-    primMST(&g);
+    int vertices;
+    int graph[MAX][MAX];
+    
+    printf("Enter the number of vertices: ");
+    scanf("%d", &vertices);
+    
+    printf("Enter the adjacency matrix (use 0 for no direct edge):\n");
+    for (int i = 0; i < vertices; i++) {
+        for (int j = 0; j < vertices; j++) {
+            scanf("%d", &graph[i][j]);
+        }
+    }
+    
+    int src;
+    printf("Enter the source vertex for Dijkstra's algorithm: ");
+    scanf("%d", &src);
+    
+    // Run Dijkstra’s Algorithm for shortest path
+    dijkstra(graph, src, vertices);
+
+    // Run Floyd-Warshall’s Algorithm for shortest path matrix
+    floydWarshall(graph, vertices);
+    
     return 0;
 }

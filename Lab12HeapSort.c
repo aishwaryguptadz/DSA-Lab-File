@@ -176,8 +176,5 @@ buildMaxHeap(arr, n);
     for (int i = 0; i < n; i++) {
         printf("%d ", arr[i]);
     }
-    printf("\n");
-printf("~Ashish Kumar Gupta \n CS-DS-2A \n 2301641540057");
-
     return 0;
 }

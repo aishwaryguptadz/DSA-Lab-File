@@ -187,21 +187,26 @@ void kruskalMST(Graph* g) {
 
 int main() {
     Graph g;
-    int vertices = 4;
+    int vertices, edges, u, v, weight;
 
+    printf("Enter the number of vertices: ");
+    scanf("%d", &vertices);
     initGraph(&g, vertices);
 
-    // Adding edges (u, v, weight)
-    addEdge(&g, 0, 1, 10);
-    addEdge(&g, 0, 2, 6);
-    addEdge(&g, 0, 3, 5);
-    addEdge(&g, 1, 3, 15);
-    addEdge(&g, 2, 3, 4);
+    printf("Enter the number of edges: ");
+    scanf("%d", &edges);
+
+    printf("Enter edges (u v weight):\n");
+    for (int i = 0; i < edges; i++) {
+        scanf("%d %d %d", &u, &v, &weight);
+        addEdge(&g, u, v, weight);
+    }
 
     // Prim's Algorithm
     primMST(&g);
 
     // Kruskal's Algorithm
     kruskalMST(&g);
+
     return 0;
 }

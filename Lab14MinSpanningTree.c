@@ -59,51 +59,62 @@
 #define MAX 10
 
 // Structure to represent an edge
-typedef struct {
+typedef struct
+{
     int u, v, weight;
 } Edge;
 
 // Graph structure
-typedef struct {
+typedef struct
+{
     int adjMatrix[MAX][MAX];
     int vertices;
 } Graph;
 
 // Function to initialize the graph
-void initGraph(Graph* g, int vertices) {
+void initGraph(Graph *g, int vertices)
+{
     g->vertices = vertices;
-    for (int i = 0; i < vertices; i++) {
-        for (int j = 0; j < vertices; j++) {
+    for (int i = 0; i < vertices; i++)
+    {
+        for (int j = 0; j < vertices; j++)
+        {
             g->adjMatrix[i][j] = 0;
         }
     }
 }
 
 // Function to add an edge
-void addEdge(Graph* g, int u, int v, int weight) {
+void addEdge(Graph *g, int u, int v, int weight)
+{
     g->adjMatrix[u][v] = weight;
-    g->adjMatrix[v][u] = weight;  // For undirected graph
+    g->adjMatrix[v][u] = weight; // For undirected graph
 }
 
 // Prim’s Algorithm to find MST
-void primMST(Graph* g) {
-    int parent[MAX]; // Array to store MST
-    int key[MAX];    // Key values to pick minimum weight edge
+void primMST(Graph *g)
+{
+    int parent[MAX];  // Array to store MST
+    int key[MAX];     // Key values to pick minimum weight edge
     int visited[MAX]; // To track vertices in MST
 
-    for (int i = 0; i < g->vertices; i++) {
+    for (int i = 0; i < g->vertices; i++)
+    {
         key[i] = INT_MAX;
         visited[i] = 0;
     }
 
-    key[0] = 0;  // Starting from the first vertex
+    key[0] = 0; // Starting from the first vertex
     parent[0] = -1;
 
-    for (int count = 0; count < g->vertices - 1; count++) {
+    for (int count = 0; count < g->vertices - 1; count++)
+    {
         // Pick the minimum key vertex from the set of vertices not yet included in MST
         int min = INT_MAX, u = -1;
-        for (int v = 0; v < g->vertices; v++) {
-            if (!visited[v] && key[v] < min) {
+        for (int v = 0; v < g->vertices; v++)
+        {
+            if (!visited[v] && key[v] < min)
+            {
                 min = key[v];
                 u = v;
             }
@@ -112,8 +123,10 @@ void primMST(Graph* g) {
         visited[u] = 1;
 
         // Update the key values of adjacent vertices
-        for (int v = 0; v < g->vertices; v++) {
-            if (g->adjMatrix[u][v] && !visited[v] && g->adjMatrix[u][v] < key[v]) {
+        for (int v = 0; v < g->vertices; v++)
+        {
+            if (g->adjMatrix[u][v] && !visited[v] && g->adjMatrix[u][v] < key[v])
+            {
                 parent[v] = u;
                 key[v] = g->adjMatrix[u][v];
             }
@@ -122,32 +135,39 @@ void primMST(Graph* g) {
 
     // Print the MST
     printf("Prim's MST: \n");
-    for (int i = 1; i < g->vertices; i++) {
+    for (int i = 1; i < g->vertices; i++)
+    {
         printf("%d - %d: %d\n", parent[i], i, g->adjMatrix[i][parent[i]]);
     }
 }
 
 // Kruskal’s Algorithm to find MST
-int find(int parent[], int i) {
+int find(int parent[], int i)
+{
     if (parent[i] == -1)
         return i;
     return find(parent, parent[i]);
 }
 
-void unionSet(int parent[], int x, int y) {
+void unionSet(int parent[], int x, int y)
+{
     int xset = find(parent, x);
     int yset = find(parent, y);
     parent[xset] = yset;
 }
 
-void kruskalMST(Graph* g) {
+void kruskalMST(Graph *g)
+{
     Edge edges[MAX * MAX];
     int edgeCount = 0;
 
     // Convert adjacency matrix to edge list
-    for (int i = 0; i < g->vertices; i++) {
-        for (int j = i + 1; j < g->vertices; j++) {
-            if (g->adjMatrix[i][j] != 0) {
+    for (int i = 0; i < g->vertices; i++)
+    {
+        for (int j = i + 1; j < g->vertices; j++)
+        {
+            if (g->adjMatrix[i][j] != 0)
+            {
                 edges[edgeCount].u = i;
                 edges[edgeCount].v = j;
                 edges[edgeCount].weight = g->adjMatrix[i][j];
@@ -157,9 +177,12 @@ void kruskalMST(Graph* g) {
     }
 
     // Sort edges based on weight
-    for (int i = 0; i < edgeCount - 1; i++) {
-        for (int j = i + 1; j < edgeCount; j++) {
-            if (edges[i].weight > edges[j].weight) {
+    for (int i = 0; i < edgeCount - 1; i++)
+    {
+        for (int j = i + 1; j < edgeCount; j++)
+        {
+            if (edges[i].weight > edges[j].weight)
+            {
                 Edge temp = edges[i];
                 edges[i] = edges[j];
                 edges[j] = temp;
@@ -168,45 +191,72 @@ void kruskalMST(Graph* g) {
     }
 
     int parent[g->vertices];
-    for (int i = 0; i < g->vertices; i++) {
+    for (int i = 0; i < g->vertices; i++)
+    {
         parent[i] = -1;
     }
 
     printf("Kruskal's MST: \n");
-    for (int i = 0; i < edgeCount; i++) {
+    for (int i = 0; i < edgeCount; i++)
+    {
         int x = find(parent, edges[i].u);
         int y = find(parent, edges[i].v);
 
         // If including this edge does not cause a cycle
-        if (x != y) {
+        if (x != y)
+        {
             printf("%d - %d: %d\n", edges[i].u, edges[i].v, edges[i].weight);
             unionSet(parent, x, y);
         }
     }
 }
 
-int main() {
+int main()
+{
     Graph g;
-    int vertices, edges, u, v, weight;
+    int vertices, edges, u, v, weight, choice;
 
-    printf("Enter the number of vertices: ");
+    // Input number of vertices and edges
+    printf("Enter number of vertices: ");
     scanf("%d", &vertices);
+
     initGraph(&g, vertices);
 
-    printf("Enter the number of edges: ");
+    // Input edges
+    printf("Enter number of edges: ");
     scanf("%d", &edges);
-
-    printf("Enter edges (u v weight):\n");
-    for (int i = 0; i < edges; i++) {
+    for (int i = 0; i < edges; i++)
+    {
+        printf("Enter edge %d (u v weight): ", i + 1);
         scanf("%d %d %d", &u, &v, &weight);
         addEdge(&g, u, v, weight);
     }
 
-    // Prim's Algorithm
-    primMST(&g);
+    printf("\nChoose an operation:\n");
+    printf("1. Perform Prim's MST\n");
+    printf("2. Perform Kruskal's MST\n");
+    printf("3. Exit\n");
+    while (1)
+    {
+        // Display menu and perform the selected operation
+        printf("Enter choice: ");
+        scanf("%d", &choice);
 
-    // Kruskal's Algorithm
-    kruskalMST(&g);
+        switch (choice)
+        {
+        case 1:
+            primMST(&g);
+            break;
+        case 2:
+            kruskalMST(&g);
+            break;
+        case 3:
+            printf("Exiting...\n");
+            return 0;
+        default:
+            printf("Invalid choice! Please try again.\n");
+        }
+    }
 
     return 0;
 }

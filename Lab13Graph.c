@@ -61,41 +61,50 @@
 #define MAX 10
 
 // Graph structure
-typedef struct Graph {
+typedef struct Graph
+{
     int adjMatrix[MAX][MAX];
     int visited[MAX];
 } Graph;
 
 // Function to initialize the graph
-void initGraph(Graph* g, int vertices) {
-    for (int i = 0; i < vertices; i++) {
+void initGraph(Graph *g, int vertices)
+{
+    for (int i = 0; i < vertices; i++)
+    {
         g->visited[i] = 0;
-        for (int j = 0; j < vertices; j++) {
+        for (int j = 0; j < vertices; j++)
+        {
             g->adjMatrix[i][j] = 0;
         }
     }
 }
 
 // Add edge to the graph
-void addEdge(Graph* g, int u, int v) {
+void addEdge(Graph *g, int u, int v)
+{
     g->adjMatrix[u][v] = 1;
     g->adjMatrix[v][u] = 1; // For undirected graph
 }
 
 // BFS traversal
-void BFS(Graph* g, int startVertex, int vertices) {
+void BFS(Graph *g, int startVertex, int vertices)
+{
     int queue[MAX], front = 0, rear = -1;
-    
+
     g->visited[startVertex] = 1;
     printf("BFS starting from vertex %d: ", startVertex);
     printf("%d ", startVertex);
     queue[++rear] = startVertex;
 
-    while (front <= rear) {
+    while (front <= rear)
+    {
         int currentVertex = queue[front++];
-        
-        for (int i = 0; i < vertices; i++) {
-            if (g->adjMatrix[currentVertex][i] == 1 && !g->visited[i]) {
+
+        for (int i = 0; i < vertices; i++)
+        {
+            if (g->adjMatrix[currentVertex][i] == 1 && !g->visited[i])
+            {
                 queue[++rear] = i;
                 g->visited[i] = 1;
                 printf("%d ", i);
@@ -106,53 +115,83 @@ void BFS(Graph* g, int startVertex, int vertices) {
 }
 
 // DFS traversal (using recursion)
-void DFS(Graph* g, int vertex, int vertices) {
+void DFS(Graph *g, int vertex, int vertices)
+{
     g->visited[vertex] = 1;
     printf("%d ", vertex);
-    
-    for (int i = 0; i < vertices; i++) {
-        if (g->adjMatrix[vertex][i] == 1 && !g->visited[i]) {
+
+    for (int i = 0; i < vertices; i++)
+    {
+        if (g->adjMatrix[vertex][i] == 1 && !g->visited[i])
+        {
             DFS(g, i, vertices);
         }
     }
 }
 
 // Reset the visited array
-void resetVisited(Graph* g, int vertices) {
-    for (int i = 0; i < vertices; i++) {
+void resetVisited(Graph *g, int vertices)
+{
+    for (int i = 0; i < vertices; i++)
+    {
         g->visited[i] = 0;
     }
 }
 
-int main() {
+int main()
+{
     Graph g;
-    int vertices, edges, u, v, startVertex;
-    
-    printf("Enter the number of vertices: ");
+    int vertices, edges, u, v, choice;
+
+    // Input number of vertices and edges
+    printf("Enter number of vertices: ");
     scanf("%d", &vertices);
-    
+
     initGraph(&g, vertices);
-    
-    printf("Enter the number of edges: ");
+
+    // Input edges
+    printf("Enter number of edges: ");
     scanf("%d", &edges);
-    
-    printf("Enter the edges (u v):\n");
-    for (int i = 0; i < edges; i++) {
+    for (int i = 0; i < edges; i++)
+    {
+        printf("Enter edge %d (u v): ", i + 1);
         scanf("%d %d", &u, &v);
         addEdge(&g, u, v);
     }
-    
-    printf("Enter the starting vertex for BFS: ");
-    scanf("%d", &startVertex);
-    resetVisited(&g, vertices);
-    BFS(&g, startVertex, vertices);
-    
-    printf("Enter the starting vertex for DFS: ");
-    scanf("%d", &startVertex);
-    resetVisited(&g, vertices);
-    printf("DFS: ");
-    DFS(&g, startVertex, vertices);
-    printf("\n");
-    
+
+    printf("\nChoose an operation:\n");
+    printf("1. Perform BFS\n2. Perform DFS\n3. Exit\n");
+    while (1)
+    {
+        // Display menu and perform the selected operation
+        printf("Enter choice: ");
+        scanf("%d", &choice);
+
+        switch (choice)
+        {
+        case 1:
+            printf("Enter starting vertex for BFS: ");
+            int startBFS;
+            scanf("%d", &startBFS);
+            resetVisited(&g, vertices);
+            BFS(&g, startBFS, vertices);
+            break;
+        case 2:
+            printf("Enter starting vertex for DFS: ");
+            int startDFS;
+            scanf("%d", &startDFS);
+            resetVisited(&g, vertices);
+            printf("DFS starting from vertex %d: ", startDFS);
+            DFS(&g, startDFS, vertices);
+            printf("\n");
+            break;
+        case 3:
+            printf("Exiting...\n");
+            return 0;
+        default:
+            printf("Invalid choice! Please try again.\n");
+        }
+    }
+
     return 0;
 }

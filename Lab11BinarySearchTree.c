@@ -149,74 +149,108 @@
 // 8) return current->data
 // 9) end Find_Largest
 
-
-
 #include <stdio.h>
 #include <stdlib.h>
 
 // Node structure for the binary search tree
-struct Node {
+struct Node
+{
     int data;
     struct Node *left, *right;
 };
 
 // Create a new node with the given data
-struct Node* createNode(int data) {
-    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+struct Node *createNode(int data)
+{
+    struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
     newNode->data = data;
     newNode->left = newNode->right = NULL;
     return newNode;
 }
 
 // Insert a node into the binary search tree
-struct Node* insert(struct Node* root, int data) {
-    if (root == NULL) {
+struct Node *insert(struct Node *root, int data)
+{
+    if (root == NULL)
+    {
         return createNode(data);
     }
-    if (data < root->data) {
+    if (data < root->data)
+    {
         root->left = insert(root->left, data);
-    } else {
+    }
+    else
+    {
         root->right = insert(root->right, data);
     }
     return root;
 }
 
+// Find the node with the minimum value in the tree
+struct Node *findMin(struct Node *root)
+{
+    while (root && root->left != NULL)
+    {
+        root = root->left;
+    }
+    return root;
+}
+
+struct Node *findMax(struct Node *root)
+{
+    while (root && root->right != NULL)
+    {
+        root = root->right;
+    }
+    return root;
+}
+
 // Delete a node from the binary search tree
-struct Node* deleteNode(struct Node* root, int data) {
-    if (root == NULL) {
+struct Node *deleteNode(struct Node *root, int data)
+{
+    if (root == NULL)
+    {
         return root;
     }
-    
+
     // Search for the node to be deleted
-    if (data < root->data) {
+    if (data < root->data)
+    {
         root->left = deleteNode(root->left, data);
-    } else if (data > root->data) {
+    }
+    else if (data > root->data)
+    {
         root->right = deleteNode(root->right, data);
-    } else {
+    }
+    else
+    {
         // Node to be deleted found
-        if (root->left == NULL) {
-            struct Node* temp = root->right;
-            free(root);
-            return temp;
-        } else if (root->right == NULL) {
-            struct Node* temp = root->left;
+        if (root->left == NULL)
+        {
+            struct Node *temp = root->right;
             free(root);
             return temp;
         }
-        
+        else if (root->right == NULL)
+        {
+            struct Node *temp = root->left;
+            free(root);
+            return temp;
+        }
+
         // Node has two children, find the inorder successor
-        struct Node* temp = findMin(root->right);
+        struct Node *temp = findMin(root->right);
         root->data = temp->data;
         root->right = deleteNode(root->right, temp->data);
     }
     return root;
 }
 
-
-
 // Traversal – In-order (left, root, right)
-void inorderTraversal(struct Node* root) {
-    if (root == NULL) {
+void inorderTraversal(struct Node *root)
+{
+    if (root == NULL)
+    {
         return;
     }
     inorderTraversal(root->left);
@@ -225,8 +259,10 @@ void inorderTraversal(struct Node* root) {
 }
 
 // Traversal – Pre-order (root, left, right)
-void preorderTraversal(struct Node* root) {
-    if (root == NULL) {
+void preorderTraversal(struct Node *root)
+{
+    if (root == NULL)
+    {
         return;
     }
     printf("%d ", root->data);
@@ -235,8 +271,10 @@ void preorderTraversal(struct Node* root) {
 }
 
 // Traversal – Post-order (left, right, root)
-void postorderTraversal(struct Node* root) {
-    if (root == NULL) {
+void postorderTraversal(struct Node *root)
+{
+    if (root == NULL)
+    {
         return;
     }
     postorderTraversal(root->left);
@@ -245,38 +283,48 @@ void postorderTraversal(struct Node* root) {
 }
 
 // Count total number of nodes
-int countNodes(struct Node* root) {
-    if (root == NULL) {
+int countNodes(struct Node *root)
+{
+    if (root == NULL)
+    {
         return 0;
     }
     return 1 + countNodes(root->left) + countNodes(root->right);
 }
 
 // Count number of internal nodes (nodes with at least one child)
-int countInternalNodes(struct Node* root) {
-    if (root == NULL) {
+int countInternalNodes(struct Node *root)
+{
+    if (root == NULL)
+    {
         return 0;
     }
-    if (root->left != NULL || root->right != NULL) {
+    if (root->left != NULL || root->right != NULL)
+    {
         return 1 + countInternalNodes(root->left) + countInternalNodes(root->right);
     }
     return 0;
 }
 
 // Count number of external nodes (leaf nodes)
-int countExternalNodes(struct Node* root) {
-    if (root == NULL) {
+int countExternalNodes(struct Node *root)
+{
+    if (root == NULL)
+    {
         return 0;
     }
-    if (root->left == NULL && root->right == NULL) {
+    if (root->left == NULL && root->right == NULL)
+    {
         return 1;
     }
     return countExternalNodes(root->left) + countExternalNodes(root->right);
 }
 
 // Find the height of the tree
-int height(struct Node* root) {
-    if (root == NULL) {
+int height(struct Node *root)
+{
+    if (root == NULL)
+    {
         return 0;
     }
     int leftHeight = height(root->left);
@@ -285,95 +333,90 @@ int height(struct Node* root) {
 }
 
 // Find the smallest node in the tree
-int findSmallest(struct Node* root) {
-    struct Node* current = root;
-    while (current && current->left != NULL) {
+int findSmallest(struct Node *root)
+{
+    struct Node *current = root;
+    while (current && current->left != NULL)
+    {
         current = current->left;
     }
     return current->data;
 }
 
 // Find the largest node in the tree
-int findLargest(struct Node* root) {
-    struct Node* current = root;
-    while (current && current->right != NULL) {
+int findLargest(struct Node *root)
+{
+    struct Node *current = root;
+    while (current && current->right != NULL)
+    {
         current = current->right;
     }
     return current->data;
 }
 
 // Main function to test the operations
-int main() {
-    struct Node* root = NULL;
+int main()
+{
+    struct Node *root = NULL;
     int choice, value;
-    
-    while (1) {
+
+    while (1)
+    {
         printf("\nBinary Search Tree Operations:\n");
         printf("1. Insert a node\n2. Delete a node\n3. Display In-order Traversal\n4. Display Pre-order Traversal\n5. Display Post-order Traversal\n6. Count total number of nodes\n7. Count internal nodes\n8. Count external nodes\n9. Find height of tree\n10. Find smallest node\n11. Find largest node\n12. Exit\n");
         printf("Enter your choice: ");
         scanf("%d", &choice);
-        
-        switch (choice) {
-            case 1:
-                printf("Enter value to insert: ");
-                scanf("%d", &value);
-                root = insert(root, value);
-                break;
-            case 2:
-                printf("Enter value to delete: ");
-                scanf("%d", &value);
-                root = deleteNode(root, value);
-                break;
-            case 3:
-                printf("Pre-order Traversal: ");
-                preorderTraversal(root);
-                printf("\n");
-                break;
-            case 4:
-                printf("Post-order Traversal: ");
-                postorderTraversal(root);
-                printf("\n");
-                break;
-            case 5:
-                printf("In-order Traversal: ");
-                inorderTraversal(root);
-                printf("\n");
-                break;
-            case 6:
-                printf("Total number of nodes: ");
-                printf(countNodes(root));
-                printf("\n");
-                break;
-            case 7:
-                printf("Total number of internal nodes: ");
-                printf(countInternalNodes(root));
-                printf("\n");
-                break;
-            case 8:
-                printf("Total number of external nodes: ");
-                printf(countExternalNodes(root));
-                printf("\n");
-                break;
-            case 9:
-                printf("Height of tree: ");
-                printf(height(root));
-                printf("\n");
-                break;
-            case 10:
-                printf("Smallest node: ");
-                printf(findSmallest(root));
-                printf("\n");
-                break;
-            case 11:
-                printf("Largest node: ");
-                printf(findLargest(root));
-                printf("\n");
-                break;
-            case 12:
-                printf("Exiting program.\n");
-                return 0;
-            default:
-                printf("Invalid choice! Please try again.\n");
+
+        switch (choice)
+        {
+        case 1:
+            printf("Enter value to insert: ");
+            scanf("%d", &value);
+            root = insert(root, value);
+            break;
+        case 2:
+            printf("Enter value to delete: ");
+            scanf("%d", &value);
+            root = deleteNode(root, value);
+            break;
+        case 3:
+            printf("In-order Traversal: ");
+            inorderTraversal(root);
+            printf("\n");
+            break;
+        case 4:
+            printf("Pre-order Traversal: ");
+            preorderTraversal(root);
+            printf("\n");
+            break;
+        case 5:
+            printf("Post-order Traversal: ");
+            postorderTraversal(root);
+            printf("\n");
+            break;
+        case 6:
+            printf("Total number of nodes: %d\n", countNodes(root));
+            break;
+        case 7:
+            printf("Total number of internal nodes: %d\n", countInternalNodes(root));
+            break;
+        case 8:
+            printf("Total number of external nodes: %d\n", countExternalNodes(root));
+            break;
+        case 9:
+            printf("Height of tree: %d\n", height(root));
+            break;
+        case 10:
+            printf("Smallest node: %d\n", findSmallest(root));
+            break;
+        case 11:
+            printf("Largest node: %d\n", findLargest(root));
+            break;
+        case 12:
+            printf("Exiting program.\n");
+            return 0;
+        default:
+            printf("Invalid choice! Please try again.\n");
         }
     }
 }

@@ -126,23 +126,33 @@ void resetVisited(Graph* g, int vertices) {
 
 int main() {
     Graph g;
-    int vertices = 5;
+    int vertices, edges, u, v, startVertex;
+    
+    printf("Enter the number of vertices: ");
+    scanf("%d", &vertices);
     
     initGraph(&g, vertices);
-
-    // Adding edges
-    addEdge(&g, 0, 1);
-    addEdge(&g, 0, 2);
-    addEdge(&g, 1, 3);
-    addEdge(&g, 1, 4);
     
-    // BFS Traversal
+    printf("Enter the number of edges: ");
+    scanf("%d", &edges);
+    
+    printf("Enter the edges (u v):\n");
+    for (int i = 0; i < edges; i++) {
+        scanf("%d %d", &u, &v);
+        addEdge(&g, u, v);
+    }
+    
+    printf("Enter the starting vertex for BFS: ");
+    scanf("%d", &startVertex);
     resetVisited(&g, vertices);
-    BFS(&g, 0, vertices);
-
-    // DFS Traversal
+    BFS(&g, startVertex, vertices);
+    
+    printf("Enter the starting vertex for DFS: ");
+    scanf("%d", &startVertex);
     resetVisited(&g, vertices);
-    printf("DFS starting from vertex 0: ");
-    DFS(&g, 0, vertices);
+    printf("DFS: ");
+    DFS(&g, startVertex, vertices);
+    printf("\n");
+    
     return 0;
 }

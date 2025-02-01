@@ -64,23 +64,27 @@
 #include <stdio.h>
 
 // Function to heapify a subtree rooted at index i
-void heapify(int arr[], int n, int i) {
-    int largest = i; // Initialize largest as root
-    int left = 2 * i + 1; // left child
+void heapify(int arr[], int n, int i)
+{
+    int largest = i;       // Initialize largest as root
+    int left = 2 * i + 1;  // left child
     int right = 2 * i + 2; // right child
 
     // If left child is larger than root
-    if (left < n && arr[left] > arr[largest]) {
+    if (left < n && arr[left] > arr[largest])
+    {
         largest = left;
     }
 
     // If right child is larger than largest so far
-    if (right < n && arr[right] > arr[largest]) {
+    if (right < n && arr[right] > arr[largest])
+    {
         largest = right;
     }
 
     // If largest is not root
-    if (largest != i) {
+    if (largest != i)
+    {
         int temp = arr[i];
         arr[i] = arr[largest];
         arr[largest] = temp;
@@ -91,20 +95,24 @@ void heapify(int arr[], int n, int i) {
 }
 
 // Build a max-heap
-void buildMaxHeap(int arr[], int n) {
+void buildMaxHeap(int arr[], int n)
+{
     // Start from the last non-leaf node and heapify each node
-    for (int i = n / 2 - 1; i >= 0; i--) {
+    for (int i = n / 2 - 1; i >= 0; i--)
+    {
         heapify(arr, n, i);
     }
 }
 
 // Function to perform heap sort
-void heapSort(int arr[], int n) {
+void heapSort(int arr[], int n)
+{
     // Build a max-heap
     buildMaxHeap(arr, n);
 
     // One by one extract elements
-    for (int i = n - 1; i >= 0; i--) {
+    for (int i = n - 1; i >= 0; i--)
+    {
         // Move current root to end
         int temp = arr[0];
         arr[0] = arr[i];
@@ -116,13 +124,15 @@ void heapSort(int arr[], int n) {
 }
 
 // Function to insert an element into the heap
-void insertElement(int arr[], int* n, int value) {
+void insertElement(int arr[], int *n, int value)
+{
     (*n)++;
     arr[*n - 1] = value;
-    
+
     // Reheap up to maintain heap property
     int i = *n - 1;
-    while (i > 0 && arr[(i - 1) / 2] < arr[i]) {
+    while (i > 0 && arr[(i - 1) / 2] < arr[i])
+    {
         int temp = arr[i];
         arr[i] = arr[(i - 1) / 2];
         arr[(i - 1) / 2] = temp;
@@ -131,78 +141,88 @@ void insertElement(int arr[], int* n, int value) {
 }
 
 // Function to delete an element from the heap
-void deleteElement(int arr[], int* n) {
-    if (*n <= 0) {
+void deleteElement(int arr[], int *n)
+{
+    if (*n <= 0)
+    {
         printf("Heap is empty\n");
         return;
     }
-    
+
     arr[0] = arr[*n - 1];
     (*n)--;
-    
+
     // Reheap down to maintain heap property
     heapify(arr, *n, 0);
 }
 
-int main() {
+int main()
+{
     int arr[100], n, choice, value;
 
     printf("Enter number of elements: ");
     scanf("%d", &n);
     printf("Enter %d elements: ", n);
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++)
+    {
         scanf("%d", &arr[i]);
     }
 
-    while (1) {
-        printf("\nChoose an operation:\n");
-        printf("1. Perform Heap Sort\n");
-        printf("2. Insert an element\n");
-        printf("3. Delete the root element\n");
-        printf("4. Display the array\n");
-        printf("5. Exit\n");
+    printf("\nChoose an operation:\n");
+    printf("1. Perform Heap Sort\n");
+    printf("2. Insert an element\n");
+    printf("3. Delete the root element\n");
+    printf("4. Display the array\n");
+    printf("5. Exit\n");
+    while (1)
+    {
         printf("Enter choice: ");
         scanf("%d", &choice);
 
-        switch (choice) {
-            case 1:
-                heapSort(arr, n);
-                printf("Sorted array: ");
-                for (int i = 0; i < n; i++) {
-                    printf("%d ", arr[i]);
-                }
-                printf("\n");
-                break;
-            case 2:
-                printf("Enter value to insert: ");
-                scanf("%d", &value);
-                insertElement(arr, &n, value);
-                printf("Array after insertion: ");
-                for (int i = 0; i < n; i++) {
-                    printf("%d ", arr[i]);
-                }
-                printf("\n");
-                break;
-            case 3:
-                deleteElement(arr, &n);
-                printf("Array after deletion: ");
-                for (int i = 0; i < n; i++) {
-                    printf("%d ", arr[i]);
-                }
-                printf("\n");
-                break;
-            case 4:
-                printf("Current array: ");
-                for (int i = 0; i < n; i++) {
-                    printf("%d ", arr[i]);
-                }
-                printf("\n");
-                break;
-            case 5:
-                printf("Exiting...\n");
-                return 0;
-            default:
-                printf("Invalid choice! Please try again.\n");
+        switch (choice)
+        {
+        case 1:
+            heapSort(arr, n);
+            printf("Sorted array: ");
+            for (int i = 0; i < n; i++)
+            {
+                printf("%d ", arr[i]);
+            }
+            printf("\n");
+            break;
+        case 2:
+            printf("Enter value to insert: ");
+            scanf("%d", &value);
+            insertElement(arr, &n, value);
+            printf("Array after insertion: ");
+            for (int i = 0; i < n; i++)
+            {
+                printf("%d ", arr[i]);
+            }
+            printf("\n");
+            break;
+        case 3:
+            deleteElement(arr, &n);
+            printf("Array after deletion: ");
+            for (int i = 0; i < n; i++)
+            {
+                printf("%d ", arr[i]);
+            }
+            printf("\n");
+            break;
+        case 4:
+            printf("Current array: ");
+            for (int i = 0; i < n; i++)
+            {
+                printf("%d ", arr[i]);
+            }
+            printf("\n");
+            break;
+        case 5:
+            printf("Exiting...\n");
+            return 0;
+        default:
+            printf("Invalid choice! Please try again.\n");
         }
     }
 

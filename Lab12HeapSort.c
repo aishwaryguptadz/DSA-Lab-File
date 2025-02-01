@@ -145,36 +145,66 @@ void deleteElement(int arr[], int* n) {
 }
 
 int main() {
-    int arr[] = { 12, 11, 13, 5, 6, 7 };
-    int n = sizeof(arr) / sizeof(arr[0]);
+    int arr[100], n, choice, value;
 
-    printf("Original array: ");
+    printf("Enter number of elements: ");
+    scanf("%d", &n);
+    printf("Enter %d elements: ", n);
     for (int i = 0; i < n; i++) {
-        printf("%d ", arr[i]);
+        scanf("%d", &arr[i]);
     }
-    printf("\n");
 
-    heapSort(arr, n);
+    while (1) {
+        printf("\nChoose an operation:\n");
+        printf("1. Perform Heap Sort\n");
+        printf("2. Insert an element\n");
+        printf("3. Delete the root element\n");
+        printf("4. Display the array\n");
+        printf("5. Exit\n");
+        printf("Enter choice: ");
+        scanf("%d", &choice);
 
-    printf("Sorted array: ");
-    for (int i = 0; i < n; i++) {
-        printf("%d ", arr[i]);
+        switch (choice) {
+            case 1:
+                heapSort(arr, n);
+                printf("Sorted array: ");
+                for (int i = 0; i < n; i++) {
+                    printf("%d ", arr[i]);
+                }
+                printf("\n");
+                break;
+            case 2:
+                printf("Enter value to insert: ");
+                scanf("%d", &value);
+                insertElement(arr, &n, value);
+                printf("Array after insertion: ");
+                for (int i = 0; i < n; i++) {
+                    printf("%d ", arr[i]);
+                }
+                printf("\n");
+                break;
+            case 3:
+                deleteElement(arr, &n);
+                printf("Array after deletion: ");
+                for (int i = 0; i < n; i++) {
+                    printf("%d ", arr[i]);
+                }
+                printf("\n");
+                break;
+            case 4:
+                printf("Current array: ");
+                for (int i = 0; i < n; i++) {
+                    printf("%d ", arr[i]);
+                }
+                printf("\n");
+                break;
+            case 5:
+                printf("Exiting...\n");
+                return 0;
+            default:
+                printf("Invalid choice! Please try again.\n");
+        }
     }
-    printf("\n");
-buildMaxHeap(arr, n);
-    // Inserting a new element
-    insertElement(arr, &n, 15);
-    printf("After inserting 15: ");
-    for (int i = 0; i < n; i++) {
-        printf("%d ", arr[i]);
-    }
-    printf("\n");
 
-    // Deleting the root element
-    deleteElement(arr, &n);
-    printf("After deleting the root: ");
-    for (int i = 0; i < n; i++) {
-        printf("%d ", arr[i]);
-    }
     return 0;
 }
